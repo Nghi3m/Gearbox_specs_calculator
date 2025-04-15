@@ -1,0 +1,76 @@
+# Built application files
+*.apk
+*.ap_ 
+*.aab
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+out/
+
+# Gradle files
+.gradle/
+build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Log files
+*.log
+
+# Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Keystore files
+*.jks
+*.keystore
+
+# External native build folder
+.externalNativeBuild
+
+# NDK
+.cxx/
+
+# Google Services plugin
+google-services.json
+google-services.plist
+
+# Crashlytics
+fabric.properties
+.crashlytics/
+.crashlytics.properties
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+
+# Flutter (if applicable)
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache
+.dart_tool/
+build/
+*.dart_tool/
+*.package
+
+# VS Code settings
+.vscode/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Jetpack Compose compiler metrics and reports
+compose-metrics/
+compose-report/
