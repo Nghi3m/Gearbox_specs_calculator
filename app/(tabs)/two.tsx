@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     borderColor: "#3b82f6", // Vercel blue
     rowGap: 10,
     marginHorizontal: 8,
-    marginVertical: 20,
+    marginVertical: 12,
   },
   resultRow: {
     justifyContent: "space-between",

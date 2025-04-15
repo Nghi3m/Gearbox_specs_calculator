@@ -59,21 +59,6 @@ export type Selected =
     'Chế độ làm việc': WorkOption
   }
 
-function CheckedInput(props: {
-  o: Inputs,
-  callbackfn: (field, index) => React.JSX.Element | null,
-  o1: Selected,
-  callbackfn1: (label) => React.JSX.Element
-}) {
-  return <View style={styles.inputContainer}>
-    {Object.keys(props.o).map(props.callbackfn)}
-    {
-      Object.keys(props.o1).map(props.callbackfn1
-      )
-    }
-  </View>;
-}
-
 const CalculateBellSpecs: React.FC<{
   initialInputs?: Inputs | null,
   initialSelected?: Selected | null
@@ -268,60 +253,66 @@ const CalculateBellSpecs: React.FC<{
           <Text>Lưu</Text>
         </Button>
       </View>
-      <CheckedInput o={inputs} callbackfn={(field, index) => {
-        return index % 3 === 0 ? (
+      <View style={styles.inputContainer}>
+        {Object.keys(inputs).map((field, index) => {
+          return index % 3 === 0 ? (
             <View key={field} style={styles.row}>
               {[
-                field,
-                Object.keys(inputs)[index + 1],
-                Object.keys(inputs)[index + 2],
-              ].map(
-                  (key) =>
-                      key && (
-                          <View key={key} style={styles.inputWrapper}>
-                            <Text style={styles.label}>{key}</Text>
-                            <TextInput
-                                onFocus={() => setIsFocused(prev => {
-                                  return {...prev, [key]: true}
-                                })}
-                                onBlur={() => setIsFocused(prev => {
-                                  return {...prev, [key]: false}
-                                })}
-                                style={[
-                                  styles.input,
-                                  errors[key] ? styles.inputError :
-                                      isFocused[key] ? styles.inputFocused : styles.inputUnfocused,
-                                ]}
-                                keyboardType="numeric"
-                                value={inputs[key]}
-                                onChangeText={(value: string) => handleInputChange(key, value)}
-                                placeholder={
-                                  ranges[key].max === Infinity
-                                      ? `> ${ranges[key].min}`
-                                      : `${ranges[key].min} - ${ranges[key].max}`
-                                }
-                                placeholderTextColor="#9CA3AF"
-                            />
-                            {errors[key] ? (
-                                <Text style={styles.errorText}>{errors[key]}</Text>
-                            ) : null}
-                          </View>
-                      )
+                    field, 
+                    Object.keys(inputs)[index + 1],
+                    Object.keys(inputs)[index + 2],
+                ].map(
+                (key) =>
+                  key && (
+                    <View key={key} style={styles.inputWrapper}>
+                      <Text style={styles.label}>{key}</Text>
+                      <TextInput
+                        onFocus={() => setIsFocused(prev => {
+                            return {...prev, [key] : true}
+                        })}
+                        onBlur={() => setIsFocused(prev => {
+                            return {...prev, [key] : false}
+                        })}
+                        style={[
+                          styles.input,
+                          errors[key] ? styles.inputError : 
+                          isFocused[key] ? styles.inputFocused : styles.inputUnfocused,
+                        ]}
+                        keyboardType="numeric"
+                        value={inputs[key]}
+                        onChangeText={(value: string) => handleInputChange(key, value)}
+                        placeholder={
+                          ranges[key].max === Infinity
+                            ? `> ${ranges[key].min}`
+                            : `${ranges[key].min} - ${ranges[key].max}`
+                        }
+                        placeholderTextColor="#9CA3AF"
+                      />
+                      {errors[key] ? (
+                        <Text style={styles.errorText}>{errors[key]}</Text>
+                      ) : null}
+                    </View>
+                  )
               )}
             </View>
-        ) : null;
-      }} o1={selected} callbackfn1={(label) => {
-        const typedLabel = label as keyof Selected
-        return (
-            <View style={styles.chipContainer}>
-              <Text style={styles.label}>{label}</Text>
-              <Chip
-                  options={options[label]}
-                  selected={selected[typedLabel]}
-                  onSelect={value => setSelected({...selected, [typedLabel]: value})}
-              />
-            </View>)
-      }}/>
+          ) : null;
+        })}
+        {
+          Object.keys(selected).map((label) => {
+            const typedLabel = label as keyof Selected
+            return (
+          <View style={styles.chipContainer}>
+            <Text style={styles.label}>{label}</Text>
+            <Chip 
+              options={options[label]} 
+              selected={selected[typedLabel]}
+              onSelect={value => setSelected({...selected, [typedLabel]: value})}
+            />
+          </View>)
+          }
+        )
+        }
+      </View>
       {allValid ? (
           <View>
             <View>
@@ -354,7 +345,7 @@ const CalculateBellSpecs: React.FC<{
                                         <Text style={styles.resultText}>{label}</Text>
                                         <Text style={styles.resultNum}>{typeof result[label] === "number" ?
                                             (
-                                                isNumberObject(result[label]) && result[label] > 100 ?
+                                                result[label] > 100 ?
                                                     result[label].toFixed(0) :
                                                     result[label].toFixed(3)
                                             ) :

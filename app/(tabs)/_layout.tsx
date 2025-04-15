@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import { useEffect } from "react";
 
 export default function TabLayout() {
@@ -20,7 +20,7 @@ export default function TabLayout() {
           options={{
             title: "Home",
             tabBarIcon: ({ color, size, focused }) => (
-              <View style={[styles.iconWrapper, focused && styles.iconActive]}>
+              <View style={[styles.iconWrapper, focused && styles.iconActive, Platform.OS == "android" && styles.iconOffset]}>
                 <Ionicons name="calculator" size={size} color={color} />
               </View>
             ),
@@ -32,7 +32,7 @@ export default function TabLayout() {
           options={{
             title: "Profile",
             tabBarIcon: ({ color, size, focused }) => (
-              <View style={[styles.iconWrapper, focused && styles.iconActive]}>
+              <View style={[styles.iconWrapper, focused && styles.iconActive, Platform.OS == "android" && styles.iconOffset]}>
                 <Ionicons name="bookmark" size={size} color={color} />
               </View>
             ),
@@ -47,11 +47,11 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "black",
   },
   tabBar: {
     position: "absolute",
-    bottom: 0,
+    bottom: 10,
     left: 20,
     right: 20,
     height: 70,
@@ -74,9 +74,12 @@ const styles = StyleSheet.create({
     minHeight: 50,
     minWidth: 50,
     position: "relative",
-    bottom: 0,
+  
   },
   iconActive: {
     backgroundColor: "#3b82f633", // Light orange background when active
   },
+  iconOffset: {
+    bottom: 13
+  }
 });
