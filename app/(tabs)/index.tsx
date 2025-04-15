@@ -12,31 +12,13 @@ export default function CalculateScreen() {
   const [selectedScreen, setSelectedScreen] = useState("Bộ truyền đai")
   const [inputs, setInputs] = useState<Inputs | null>(null)
   const [selected, setSelected] = useState<Selected | null>(null)
-  // const [setScreenChip, setScreenChipFunction] = useState<React.Dispatch<React.SetStateAction<string>> | null>(null)
-  // const [ , forceUpdate] = useState(0)
-  useFocusEffect(()=> {
-    // screenSingleton.subscribe(() => forceUpdate((x)=> x + 1))
-    setInputs(screenSingleton.inputs)
-    setSelected(screenSingleton.selected)
-    setSelectedScreen(screenSingleton.selectedScreen)
-    // return () => screenSingleton.unsubscribe(() => forceUpdate((x)=> x + 1))
-    console.log(screenSingleton)
-    console.log("calculation screen mounted!")
-    console.log(inputs)
-    // screenSingleton.setInputs = setInputs
-    // screenSingleton.setSelected = setSelected
-    // screenSingleton.setSelectedScreen = setSelectedScreen
-    // console.log(screenSingleton.setInputs)
-  })
+
   function handleSelectScreen(screen: string) {
     screenSingleton.inputs = null
     screenSingleton.selected = null
     screenSingleton.selectedScreen = screen
     console.log("screen selected!")
     setSelectedScreen(screen)
-    // setInputs(screenSingleton.inputs)
-    // setSelected(screenSingleton.selected)
-    // setSelectedScreen(screenSingleton.selectedScreen)
   }
   return (
     <ScrollView>
@@ -48,16 +30,16 @@ export default function CalculateScreen() {
       {
         selectedScreen === "Công suất động cơ" && 
           <CalculatePower
-            // initialInputs={inputs}
+            initialInputs={inputs}
           /> ||
         selectedScreen === "Tỷ số truyền" && 
           <CalculateRatio
-            // initialInputs={inputs}
+            initialInputs={inputs}
           /> ||
         selectedScreen === "Bộ truyền đai" && 
           <CalculateBellSpecs 
-            // initialInputs = {inputs}
-            // initialSelected={selected}
+            initialInputs = {inputs}
+            initialSelected={selected}
           />
       }
     </ScrollView>

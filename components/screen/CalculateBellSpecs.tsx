@@ -6,6 +6,8 @@ import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScreenSingleton } from "@/app/(tabs)";
 import { sendIntent } from "expo-linking";
+import {isNumber} from "node:util";
+import {isNumberObject} from "node:util/types";
 type Ranges = Record<string, { min: number; max: number }>;
 export type Inputs = Record<string, string>
 type Result = Record<string, string|number>
@@ -56,6 +58,22 @@ export type Selected =
     'Loại tải trọng': LoadOption,
     'Chế độ làm việc': WorkOption
   }
+
+function CheckedInput(props: {
+  o: Inputs,
+  callbackfn: (field, index) => React.JSX.Element | null,
+  o1: Selected,
+  callbackfn1: (label) => React.JSX.Element
+}) {
+  return <View style={styles.inputContainer}>
+    {Object.keys(props.o).map(props.callbackfn)}
+    {
+      Object.keys(props.o1).map(props.callbackfn1
+      )
+    }
+  </View>;
+}
+
 const CalculateBellSpecs: React.FC<{
   initialInputs?: Inputs | null,
   initialSelected?: Selected | null
@@ -241,77 +259,71 @@ const CalculateBellSpecs: React.FC<{
       <View style={styles.titleRow}>
         <Text style={styles.title}>Tham số</Text>
         <Button
-          onPress={handleSave}
+            onPress={handleSave}
         >
           <Ionicons
-            name="bookmark"
-            size={18}
+              name="bookmark"
+              size={18}
           />
           <Text>Lưu</Text>
         </Button>
       </View>
-      <View style={styles.inputContainer}>
-        {Object.keys(inputs).map((field, index) => {
-          return index % 3 === 0 ? (
+      <CheckedInput o={inputs} callbackfn={(field, index) => {
+        return index % 3 === 0 ? (
             <View key={field} style={styles.row}>
               {[
-                    field, 
-                    Object.keys(inputs)[index + 1],
-                    Object.keys(inputs)[index + 2],
-                ].map(
-                (key) =>
-                  key && (
-                    <View key={key} style={styles.inputWrapper}>
-                      <Text style={styles.label}>{key}</Text>
-                      <TextInput
-                        onFocus={() => setIsFocused(prev => {
-                            return {...prev, [key] : true}
-                        })}
-                        onBlur={() => setIsFocused(prev => {
-                            return {...prev, [key] : false}
-                        })}
-                        style={[
-                          styles.input,
-                          errors[key] ? styles.inputError : 
-                          isFocused[key] ? styles.inputFocused : styles.inputUnfocused,
-                        ]}
-                        keyboardType="numeric"
-                        value={inputs[key]}
-                        onChangeText={(value: string) => handleInputChange(key, value)}
-                        placeholder={
-                          ranges[key].max === Infinity
-                            ? `> ${ranges[key].min}`
-                            : `${ranges[key].min} - ${ranges[key].max}`
-                        }
-                        placeholderTextColor="#9CA3AF"
-                      />
-                      {errors[key] ? (
-                        <Text style={styles.errorText}>{errors[key]}</Text>
-                      ) : null}
-                    </View>
-                  )
+                field,
+                Object.keys(inputs)[index + 1],
+                Object.keys(inputs)[index + 2],
+              ].map(
+                  (key) =>
+                      key && (
+                          <View key={key} style={styles.inputWrapper}>
+                            <Text style={styles.label}>{key}</Text>
+                            <TextInput
+                                onFocus={() => setIsFocused(prev => {
+                                  return {...prev, [key]: true}
+                                })}
+                                onBlur={() => setIsFocused(prev => {
+                                  return {...prev, [key]: false}
+                                })}
+                                style={[
+                                  styles.input,
+                                  errors[key] ? styles.inputError :
+                                      isFocused[key] ? styles.inputFocused : styles.inputUnfocused,
+                                ]}
+                                keyboardType="numeric"
+                                value={inputs[key]}
+                                onChangeText={(value: string) => handleInputChange(key, value)}
+                                placeholder={
+                                  ranges[key].max === Infinity
+                                      ? `> ${ranges[key].min}`
+                                      : `${ranges[key].min} - ${ranges[key].max}`
+                                }
+                                placeholderTextColor="#9CA3AF"
+                            />
+                            {errors[key] ? (
+                                <Text style={styles.errorText}>{errors[key]}</Text>
+                            ) : null}
+                          </View>
+                      )
               )}
             </View>
-          ) : null;
-        })}
-        {
-          Object.keys(selected).map((label) => {
-            const typedLabel = label as keyof Selected
-            return (
-          <View style={styles.chipContainer}>
-            <Text style={styles.label}>{label}</Text>
-            <Chip 
-              options={options[label]} 
-              selected={selected[typedLabel]}
-              onSelect={value => setSelected({...selected, [typedLabel]: value})}
-            />
-          </View>)
-          }
-        )
-        }
-      </View>
+        ) : null;
+      }} o1={selected} callbackfn1={(label) => {
+        const typedLabel = label as keyof Selected
+        return (
+            <View style={styles.chipContainer}>
+              <Text style={styles.label}>{label}</Text>
+              <Chip
+                  options={options[label]}
+                  selected={selected[typedLabel]}
+                  onSelect={value => setSelected({...selected, [typedLabel]: value})}
+              />
+            </View>)
+      }}/>
       {allValid ? (
-        <View>
+          <View>
             <View>
               <View style={styles.titleRow}>
                 <Text style={styles.title}>Kết quả</Text>
@@ -325,46 +337,47 @@ const CalculateBellSpecs: React.FC<{
                 </Button> */}
                 <View/>
               </View>
-                <View style={styles.resultContainer}>
-                    {
-                        Object.keys(result).map((label, index) => 
-                            index % 4 === 0? (
-                                <View key={index} style={styles.resultRow}> 
-                                    {
-                                        [
-                                            label, 
-                                            Object.keys(result)[index + 1],
-                                            Object.keys(result)[index + 2],
-                                            Object.keys(result)[index + 3],
-                                        ].map( (label) =>
-                                            label? 
-                                            <View key={label} style={styles.resultCol}>
-                                                <Text style={styles.resultText}>{label}</Text>
-                                                <Text style={styles.resultNum}>{typeof result[label] === "number" ?
-                                                  (
-                                                    result[label] > 100 ?
+              <View style={styles.resultContainer}>
+                {
+                  Object.keys(result).map((label, index) =>
+                      index % 4 === 0 ? (
+                          <View key={index} style={styles.resultRow}>
+                            {
+                              [
+                                label,
+                                Object.keys(result)[index + 1],
+                                Object.keys(result)[index + 2],
+                                Object.keys(result)[index + 3],
+                              ].map((label) =>
+                                  label ?
+                                      <View key={label} style={styles.resultCol}>
+                                        <Text style={styles.resultText}>{label}</Text>
+                                        <Text style={styles.resultNum}>{typeof result[label] === "number" ?
+                                            (
+                                                isNumberObject(result[label]) && result[label] > 100 ?
                                                     result[label].toFixed(0) :
                                                     result[label].toFixed(3)
-                                                  ):
-                                                  result[label] }
-                                                </Text>
-                                            </View>: <View style={styles.resultRow}/>)
-                                    }
-                            
-                                </View>
-                            ): null
-                        )
-                    }
-                </View>
+                                            ) :
+                                            result[label]}
+                                        </Text>
+                                      </View> : <View style={styles.resultRow}/>)
+                            }
+
+                          </View>
+                      ) : null
+                  )
+                }
+              </View>
             </View>
-        </View>
+          </View>
       ) : (
-        <View style={styles.warningContainer}>
-          <Text style={styles.warningText}>
-            Hãy điền đầy đủ và đảm bảo các tham số nằm trong khoảng hợp lệ.
-          </Text>
-        </View>
+          <View style={styles.warningContainer}>
+            <Text style={styles.warningText}>
+              Hãy điền đầy đủ và đảm bảo các tham số nằm trong khoảng hợp lệ.
+            </Text>
+          </View>
       )}
+      <View style={styles.bottomSpacing}/>
     </ScrollView>
   );
 }
@@ -696,5 +709,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 6
+  },
+  bottomSpacing: {
+    height: 200,
   }
 });

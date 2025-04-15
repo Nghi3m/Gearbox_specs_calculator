@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     position: "absolute",
-    bottom: 10,
+    bottom: 0,
     left: 20,
     right: 20,
     height: 70,
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     minHeight: 50,
     minWidth: 50,
     position: "relative",
-    bottom: 13.7,
+    bottom: 0,
   },
   iconActive: {
     backgroundColor: "#3b82f633", // Light orange background when active
