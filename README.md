@@ -4,6 +4,6 @@ A react native app that takes in constraints like gearbox output power, load, RP
 ## Screenshot of the app
 
 <div style="display: flex; justify-content: space-between;">
-  <img src="screenshots/calculation_tab.jpg" alt="Calculation tab" width="300"/>
-  <img src="screenshots/bookmark_tab.jpg" alt="Bookmark tab" width="300"/>
+  <img src="screenshots/calculation_screen.jpg" alt="Calculation tab" width="300"/>
+  <img src="screenshots/bookmark_screen.jpg" alt="Bookmark tab" width="300"/>
 </div>
