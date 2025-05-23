@@ -139,7 +139,9 @@ const CalculationViewModel = () => {
             Object.keys(inputs).map(key => [key, false])
         )
     )
-
+  useEffect(()=>{
+    setErrors({})
+  }, [selectedModel])
   return (
     CalculationView(handleSave, 
       inputs, 
