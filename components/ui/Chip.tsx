@@ -1,4 +1,3 @@
-import { ScreenSingleton } from "@/app/(tabs)";
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
@@ -46,7 +45,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     gap: 8,
     paddingVertical: 4,
-    backgroundColor: "#000000",
+    backgroundColor: "#0c0d0e",
     maxHeight: 50,
 
   },

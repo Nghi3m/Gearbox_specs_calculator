@@ -2,10 +2,12 @@ import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { View, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import { useEffect } from "react";
+import { StatusBar } from 'expo-status-bar';
 
 export default function TabLayout() {
   return (
     <View style={styles.container}>
+      <StatusBar style="light" backgroundColor="#0c0d0e" />
       <Tabs
         screenOptions={{
           tabBarStyle: styles.tabBar,

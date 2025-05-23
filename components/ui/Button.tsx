@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     backgroundColor: "#fff",
-    marginHorizontal: 4,
     fontSize: 16,
     maxHeight: 90,
     flexDirection: 'row',

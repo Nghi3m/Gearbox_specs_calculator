@@ -3,25 +3,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 import Button from '@/components/ui/Button';
 import { Ionicons } from '@expo/vector-icons';
-import { Inputs, Selected } from '@/components/screen/CalculateBellSpecs';
-import { ScreenSingleton } from '.';
+import useCalculationNameStore from "@/stores/useCalculationNameStore";
+import useSelectedStore from "@/stores/useSelectedStore";
+import useInputStore from "@/stores/useInputStore";
 import { router } from 'expo-router';
+import { Inputs, Selected } from '@/misc/types';
 export default function BookmarkScreen() {
-  const screenSingleton = ScreenSingleton.getInstance()
+  const {calculationName, setCalculationName} = useCalculationNameStore()
+  const {inputs, setInputs} = useInputStore()
+  const {selected, setSelected} = useSelectedStore()
   const [bookmarks, setBookmarks] = useState<Record<string, any>[]>([])
   function handleEditParameters(type: string, inputs: Inputs, selected: Selected) {
     return () => {
-      // if (screenSingleton.setInputs ) {
-        //   console.log('input set!')
-        //   screenSingleton.setInputs(inputs)
-        // }
-        // if (screenSingleton.setSelected)
-        //   screenSingleton.setSelected(selected)
-        // if (screenSingleton.setSelectedScreen)
-        //   screenSingleton.setSelectedScreen(type)
-        screenSingleton.selectedScreen = type
-        screenSingleton.inputs = inputs
-        screenSingleton.selected = selected
+        setCalculationName(type)
+        setInputs(inputs)
+        setSelected(selected)
         router.push("/(tabs)")
       // screenSingleton.triggerUpdate()
       // console.log(screenSingleton.inputs, screenSingleton.seleted, screenSingleton.selectedScreen)
@@ -38,9 +34,9 @@ export default function BookmarkScreen() {
   useEffect(() => {
     const interval = setInterval(() => {
       loadBookmarks();
-    }, 500); // polling every second (adjust as needed)
+    }, 300); 
 
-    return () => clearInterval(interval); // cleanup
+    return () => clearInterval(interval); 
   }, []);
   function handleDelete(time: string) {
     return async () => {
@@ -50,8 +46,27 @@ export default function BookmarkScreen() {
       await AsyncStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks))
     }
   }
+  async function handleDeleteAll() {
+    await AsyncStorage.setItem('bookmarks', JSON.stringify([]))
+  }
   return (
+    <>
+
+      <View style={styles.header}>
+        <Text style={styles.title}>Lịch sử</Text>
+        <Button
+          onPress={handleDeleteAll}
+          outline
+        >
+          <Ionicons
+            color={'#fff'}
+            name="trash"
+            size={18} />
+          <Text style={styles.outlineButtonText}>Xóa tất cả</Text>
+        </Button>
+      </View>
     <ScrollView style={styles.container}>
+      {bookmarks.length === 0&&<Text style={styles.emptyHistoryText}>Lịch sử trống.</Text>}
       {bookmarks.reverse().map((entry:Record<string, any>)=> 
       <View>
 
@@ -129,17 +144,18 @@ export default function BookmarkScreen() {
       )}
     <View style={styles.bottomSpacing}/>
     </ScrollView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000", // Vercel black
-    paddingHorizontal: 16
+    backgroundColor: "#0c0d0e", // Vercel black
+    paddingHorizontal: 16,
   },
   title: {
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: 'bold',
     color: '#fff'
   },
@@ -150,11 +166,11 @@ const styles = StyleSheet.create({
   },
   resultContainer: {
     flexDirection: "column",
-    backgroundColor: "#3b82f633",
+    backgroundColor: "#14152e",
     padding: 24,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#3b82f6", // Vercel blue
+    borderColor: "#3133b0", 
     rowGap: 10,
     marginHorizontal: 8,
     marginVertical: 12,
@@ -162,7 +178,7 @@ const styles = StyleSheet.create({
   resultRow: {
     justifyContent: "space-between",
     flexDirection: "row",
-    minWidth: 60
+    minWidth: 60,
   },
   resultCol: {
     justifyContent: "space-between",
@@ -186,13 +202,38 @@ const styles = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: "row",
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
+    gap: 15
   },
   outlineButtonText: {
     color: "#fff"
   },
   bottomSpacing: {
     height: 100,
+  },
+  header: {
+    width: "100%",
+    backgroundColor: '#0c0d0e',
+    display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    alignItems: 'center',
+    borderColor: "#666",
+    borderBottomWidth: 1,
+    },
+  emptyHistoryText: {
+    fontSize: 30,
+    color: "#666",
+    margin: "auto",
+    fontWeight: '600',
+    height: 500,
+
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 
 });
